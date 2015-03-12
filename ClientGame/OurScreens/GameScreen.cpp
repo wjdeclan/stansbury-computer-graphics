@@ -28,7 +28,7 @@ void GameScreen::Start()
 	pause = new TextActor("Console", "PAUSED");
 	pause->SetColor(Color(1.0f, 1.0f, 1.0f, 0.2f, true));
 	pause->SetAlignment(TXT_Center);
-	pause->SetPosition(0, 25);
+	pause->SetPosition(0, 50);
 	pause->SetLayer("pause");
 	theWorld.Add(pause);
 	_objects.push_back(pause);
@@ -128,7 +128,7 @@ void GameScreen::Start()
 	exit->SetSprite(/*"C:\\Users\\Declan\\Downloads\\angel2d-master\\Code\\ClientGame*/"./Resources/Images/G2B.png", 0, GL_REPEAT, GL_LINEAR, false);
 	exit->SetUVs(Vector2(0.0, 0.0), Vector2(1.0, 1.0));
 	exit->SetSize(2.0f, 1.0f);
-	exit->SetPosition(0, 25);
+	exit->SetPosition(0, 50);
 	exit->SetLayer("pause");
 	//exit->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f, true));
 	theWorld.Add(exit);
@@ -140,12 +140,12 @@ void GameScreen::MessageHandler(String content)
 	if (content == "ESC") {
 		paused = !paused;
 		if (paused) {
-			pause->SetPosition(0, 5);
-			exit->SetPosition(12, -9.5);
+			pause->SetPosition(x, y+5);
+			exit->SetPosition(x+12, y-9.5);
 		}
 		else {
-			pause->SetPosition(0, 25);
-			exit->SetPosition(0, 25);
+			pause->SetPosition(0, 50);
+			exit->SetPosition(0, 50);
 		}
 	}
 }
