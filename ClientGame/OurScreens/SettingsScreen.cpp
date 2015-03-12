@@ -11,9 +11,11 @@ SettingsScreen::SettingsScreen()
 
 void SettingsScreen::Start()
 {
+	//set up items
 	TextActor *Settings = new TextActor("Console", "Settings");
 	TextActor *Notice = new TextActor("Console", "We don't have any settings yet, sorry about that.");
 
+	//and put them in the right place, color, etc.
 	Settings->SetPosition(0, 9);
 	Settings->SetAlignment(TXT_Center);
 	Settings->SetColor(Color(0.8f, 0.2f, 0.2f, 1.0f, true));
@@ -25,6 +27,7 @@ void SettingsScreen::Start()
 	theWorld.Add(Notice);
 	_objects.push_back(Notice);
 
+	//and escape instructions
 	TextActor *instructions = new TextActor("Console", "Press Escape to return to menu.");
 	instructions->SetPosition(0, -9.5);
 	instructions->SetAlignment(TXT_Center);
@@ -35,6 +38,7 @@ void SettingsScreen::Start()
 
 void SettingsScreen::MessageHandler(String content)
 {
+	//detect escaping here
 	if (content == "ESC") {
 		OurGame.SetScreen(0);
 	}

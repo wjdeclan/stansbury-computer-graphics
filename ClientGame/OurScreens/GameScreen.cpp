@@ -5,26 +5,36 @@
 
 GameScreen::GameScreen()
 {
+	//kept around in case we want music later
 	//music = theSound.LoadSample("Resources/Sounds/xylophone.ogg", true /*stream*/);
 	//if (music)
 	//	theSound.PlaySound(music, 0.2f, true, 0);
+
+	//watch for clicks or not
 	_active = false;
 }
 
 void GameScreen::Start()
 {
+	//turn on clicks, turn off pause
 	_active = true;
 	paused = false;
 	
+	//speed used by the player
 	speed = 6.5f;
+	//default speed to reset to
 	defspeed = 6.5f;
 
+	//array counters to keep actor count lower
 	mapPos = 0;
 	transPos = 0;
 	spawnPos = 0;
+
+	//various timers
 	timing = 0;
 	shottiming = 0;
 
+	//menu items
 	pause = new TextActor("Console", "PAUSED");
 	pause->SetColor(Color(1.0f, 1.0f, 1.0f, 0.2f, true));
 	pause->SetAlignment(TXT_Center);
@@ -33,7 +43,17 @@ void GameScreen::Start()
 	theWorld.Add(pause);
 	_objects.push_back(pause);
 
-	
+	exit = new Actor();
+	exit->SetSprite(/*"C:\\Users\\Declan\\Downloads\\angel2d-master\\Code\\ClientGame*/"./Resources/Images/G2B.png", 0, GL_REPEAT, GL_LINEAR, false);
+	exit->SetUVs(Vector2(0.0, 0.0), Vector2(1.0, 1.0));
+	exit->SetSize(2.0f, 1.0f);
+	exit->SetPosition(0, 50);
+	exit->SetLayer("pause");
+	//exit->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f, true));
+	theWorld.Add(exit);
+	_objects.push_back(exit);
+
+	//map building	
 	background = new Actor();
 	background->SetLayer("background");
 	background->SetSprite("./Resources/Images/background.png");
@@ -51,6 +71,7 @@ void GameScreen::Start()
 	theWorld.Add(foreground);
 	_objects.push_back(foreground);
 
+	//loading from image file
 	Vector2List positions;
 	if (
 		PixelsToPositions(
@@ -109,6 +130,7 @@ void GameScreen::Start()
 		}
 	}
 
+	//and finally the player
 	player = new Actor();
 	player->SetSprite("C:\\Users\\Declan\\Downloads\\angel2d-master\\Code\\ClientGame\\Resources\\Images\\G2B.png");
 	player->SetSize(0.5f, 0.5);
@@ -123,22 +145,14 @@ void GameScreen::Start()
 	theWorld.Add(player);
 	_objects.push_back(player);
 	theCamera.LockTo(player);
-
-	exit = new Actor();
-	exit->SetSprite(/*"C:\\Users\\Declan\\Downloads\\angel2d-master\\Code\\ClientGame*/"./Resources/Images/G2B.png", 0, GL_REPEAT, GL_LINEAR, false);
-	exit->SetUVs(Vector2(0.0, 0.0), Vector2(1.0, 1.0));
-	exit->SetSize(2.0f, 1.0f);
-	exit->SetPosition(0, 50);
-	exit->SetLayer("pause");
-	//exit->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f, true));
-	theWorld.Add(exit);
-	_objects.push_back(exit);
 }
 
 void GameScreen::MessageHandler(String content)
 {
+	//listen for escape from input bindings ini file
 	if (content == "ESC") {
 		paused = !paused;
+		//act as toggle
 		if (paused) {
 			pause->SetPosition(x, y+5);
 			exit->SetPosition(x+12, y-9.5);
@@ -153,16 +167,24 @@ void GameScreen::MessageHandler(String content)
 void GameScreen::Update(float dt)
 {
 	if (!paused) {
+		//mob spawner timer
 		timing += dt;
+		//player shooting timer
 		shottiming += dt;
+
+		//hit detection on walls
 		lastX = x;
 		lastY = y;
+
+		//and speed reset
 		speed = defspeed;
 
+		//sprinting
 		if (theInput.IsKeyDown(ANGEL_KEY_LEFTSHIFT)) {
 			speed += 2;
 		}
 
+		//shooting
 		if (theInput.IsKeyDown(ANGEL_KEY_SPACE)) {
 			std::cout << "shoot";
 			if (shottiming > 1.0f) {
@@ -178,6 +200,7 @@ void GameScreen::Update(float dt)
 		}
 
 		//INPUT
+		//WASD movement
 		if (theInput.IsKeyDown('s') || theInput.IsKeyDown(ANGEL_KEY_DOWNARROW)
 			) {
 			if (theInput.IsKeyDown('a') || theInput.IsKeyDown(ANGEL_KEY_LEFTARROW)
@@ -207,6 +230,7 @@ void GameScreen::Update(float dt)
 			}
 			
 		}
+		//hit reset
 		for (int i = 0; i < mapPos; i++) {
 			Vector2 v2 = Vector2(x, y);
 			if (walls[i]->GetBoundingBox().Contains(v2)) {
@@ -216,6 +240,7 @@ void GameScreen::Update(float dt)
 			}
 		}
 		lastY = y;
+		//and the same for X
 			if (theInput.IsKeyDown('a') || theInput.IsKeyDown(ANGEL_KEY_LEFTARROW)
 				) {
 				if (theInput.IsKeyDown('w') || theInput.IsKeyDown(ANGEL_KEY_UPARROW)
@@ -254,6 +279,7 @@ void GameScreen::Update(float dt)
 			}
 		
 		//PROCESSING
+		//transparency checking
 		bool flag = false;
 		for (int i = 0; i < transPos; i++) {
 			Vector2 v2 = Vector2(x, y);
@@ -267,10 +293,12 @@ void GameScreen::Update(float dt)
 			foreground->SetAlpha(1.0f);
 		}
 
+		//do spawns
 		if (timing > 1.0f) {
 			timing -= 1.0f;
 			for (int i = 0; i < spawnPos; i++) {
 				Vector2 vs = spawners[i]->GetPosition();
+				//randomize around spawners
 				vs.X += MathUtil::RandomFloat() * 2 - 1;
 				vs.Y += MathUtil::RandomFloat() * 2 - 1;
 				Actor *wallPiece = new Actor();
@@ -282,6 +310,7 @@ void GameScreen::Update(float dt)
 			}
 		}
 
+		//and redraw player
 		player->SetPosition(x, y);
 	}
 	else {
@@ -291,6 +320,7 @@ void GameScreen::Update(float dt)
 
 void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button)
 {
+	//click to exit to main menu, broken in current version
 	if (_active) {
 		Vector2 v2 = MathUtil::ScreenToWorld(screenCoordinates.X, screenCoordinates.Y);
 		if (paused) {
