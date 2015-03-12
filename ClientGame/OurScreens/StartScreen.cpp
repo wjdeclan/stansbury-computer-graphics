@@ -18,6 +18,10 @@ void StartScreen::Start()
 	theWorld.Add(select);
 	_objects.push_back(select);
 
+	player = new Actor();
+	player->SetPosition(0, 0);
+	player->SetColor(Color(0.0f, 0.0f, 0.0f, 0.0f, true));
+
 	TextActor *instructions = new TextActor("Console", "Space to select. W/S to move.");
 	instructions->SetPosition(0, -9.5);
 	instructions->SetAlignment(TXT_Center);
