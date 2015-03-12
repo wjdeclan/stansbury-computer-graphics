@@ -15,6 +15,5 @@ public:
 private:
 	int pos;
 	Actor *select;
-	Actor *player;
 	AngelSampleHandle music;
 };
