@@ -307,6 +307,10 @@ void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button
 			Actor *wallPiece = new Actor();
 			wallPiece->SetColor(1.0f, 1.0f, 0.0f, 0.3f);
 			wallPiece->SetPosition(Vector2(x, y));
+			v2 -= Vector2(x, y);
+			v2.Normalize();
+			v2 *= 10;
+			v2 += Vector2(x, y);
 			wallPiece->SetLayer("hud");
 			wallPiece->MoveTo(v2, 1.0f, false, "");
 			theWorld.Add(wallPiece);
