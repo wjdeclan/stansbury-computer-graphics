@@ -43,16 +43,6 @@ void GameScreen::Start()
 	theWorld.Add(pause);
 	_objects.push_back(pause);
 
-	exit = new Actor();
-	exit->SetSprite(/*"C:\\Users\\Declan\\Downloads\\angel2d-master\\Code\\ClientGame*/"./Resources/Images/G2B.png", 0, GL_REPEAT, GL_LINEAR, false);
-	exit->SetUVs(Vector2(0.0, 0.0), Vector2(1.0, 1.0));
-	exit->SetSize(2.0f, 1.0f);
-	exit->SetPosition(0, 50);
-	exit->SetLayer("pause");
-	//exit->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f, true));
-	theWorld.Add(exit);
-	_objects.push_back(exit);
-
 	//map building	
 	background = new Actor();
 	background->SetLayer("background");
@@ -155,11 +145,9 @@ void GameScreen::MessageHandler(String content)
 		//act as toggle
 		if (paused) {
 			pause->SetPosition(x, y+5);
-			exit->SetPosition(x+12, y-9.5);
 		}
 		else {
 			pause->SetPosition(0, 50);
-			exit->SetPosition(0, 50);
 		}
 	}
 }
@@ -187,16 +175,7 @@ void GameScreen::Update(float dt)
 		//shooting
 		if (theInput.IsKeyDown(ANGEL_KEY_SPACE)) {
 			std::cout << "shoot";
-			if (shottiming > 1.0f) {
-				shottiming = 0;
-				Vector2 vs = Vector2(x, y);
-				Actor *wallPiece = new Actor();
-				wallPiece->SetColor(1.0f, 1.0f, 0.0f, 0.1f);
-				wallPiece->SetPosition(vs);
-				wallPiece->SetLayer("hud");
-				theWorld.Add(wallPiece);
-				_objects.push_back(wallPiece);
-			}
+			
 		}
 
 		//INPUT
@@ -323,10 +302,15 @@ void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button
 	//click to exit to main menu, broken in current version
 	if (_active) {
 		Vector2 v2 = MathUtil::ScreenToWorld(screenCoordinates.X, screenCoordinates.Y);
-		if (paused) {
-			if (exit->GetBoundingBox().Contains(v2)) {
-				OurGame.SetScreen(0);
-			}
+		if (shottiming > 1.0f) {
+			shottiming = 0;
+			Actor *wallPiece = new Actor();
+			wallPiece->SetColor(1.0f, 1.0f, 0.0f, 0.3f);
+			wallPiece->SetPosition(Vector2(x, y));
+			wallPiece->SetLayer("hud");
+			wallPiece->MoveTo(v2, 1.0f, false, "");
+			theWorld.Add(wallPiece);
+			_objects.push_back(wallPiece);
 		}
 	}
 }

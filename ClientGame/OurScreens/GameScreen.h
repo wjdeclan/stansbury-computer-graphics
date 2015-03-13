@@ -21,6 +21,8 @@ private:
 	bool _active;
 	float speed, defspeed;
 
+	int dirX, dirY;
+
 	float timing, shottiming;
 
 	TextActor *pause;
@@ -33,6 +35,5 @@ private:
 	Actor *spawners[25];
 
 	Actor *player;
-	Actor *exit;
 	AngelSampleHandle music;
 };
