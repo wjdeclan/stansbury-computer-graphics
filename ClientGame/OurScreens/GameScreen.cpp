@@ -305,12 +305,15 @@ void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button
 		if (shottiming > 1.0f) {
 			shottiming = 0;
 			Actor *wallPiece = new Actor();
-			wallPiece->SetColor(1.0f, 1.0f, 0.0f, 0.3f);
+			wallPiece->SetSize(0.5f, 0.8f);
+			wallPiece->SetSprite("./Resources/Images/shot.png");
 			wallPiece->SetPosition(Vector2(x, y));
 			v2 -= Vector2(x, y);
 			v2.Normalize();
 			v2 *= 10;
 			v2 += Vector2(x, y);
+			float i = MathUtil::AngleFromVector(v2);
+			wallPiece->SetRotation(MathUtil::ToDegrees(i)-90.0f);
 			wallPiece->SetLayer("hud");
 			wallPiece->MoveTo(v2, 1.0f, false, "");
 			theWorld.Add(wallPiece);
