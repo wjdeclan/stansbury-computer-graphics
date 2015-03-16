@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../OurGameManager.h"
+#include "../Mobs/Monster.h"
 
 class GameScreen : public BaseScreen, public MouseListener
 {
@@ -17,7 +18,7 @@ private:
 	bool paused;
 	float x, y;
 	float lastX, lastY;
-	int mapPos, transPos, spawnPos;
+	int mapPos, transPos, spawnPos, mobPos;
 	bool _active;
 	float speed, defspeed;
 
@@ -29,10 +30,13 @@ private:
 
 	Actor *background;
 	Actor *foreground;
+
+	Actor *shot;
 	
 	Actor *walls[500];
 	Actor *transp[100];
 	Actor *spawners[25];
+	Monster *mobs[20];
 
 	Actor *player;
 	AngelSampleHandle music;

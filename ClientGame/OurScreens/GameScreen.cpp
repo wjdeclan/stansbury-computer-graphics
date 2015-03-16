@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameScreen.h"
+#include "../Mobs/Monster.h"
 #include <iostream>
 
 
@@ -16,6 +17,9 @@ GameScreen::GameScreen()
 
 void GameScreen::Start()
 {
+	shot = new Actor();
+	theWorld.Remove(shot);
+
 	//turn on clicks, turn off pause
 	_active = true;
 	paused = false;
@@ -29,6 +33,7 @@ void GameScreen::Start()
 	mapPos = 0;
 	transPos = 0;
 	spawnPos = 0;
+	mobPos = 0;
 
 	//various timers
 	timing = 0;
@@ -273,20 +278,27 @@ void GameScreen::Update(float dt)
 		}
 
 		//do spawns
-		if (timing > 1.0f) {
-			timing -= 1.0f;
+		if (timing > 7.0f && mobPos < 20) {
+			timing -= 7.0f;
 			for (int i = 0; i < spawnPos; i++) {
 				Vector2 vs = spawners[i]->GetPosition();
 				//randomize around spawners
-				vs.X += MathUtil::RandomFloat() * 2 - 1;
-				vs.Y += MathUtil::RandomFloat() * 2 - 1;
-				Actor *wallPiece = new Actor();
+				vs.X += MathUtil::RandomFloat() * 10 - 5;
+				vs.Y += MathUtil::RandomFloat() * 10 - 5;
+				Monster *wallPiece = new Monster(vs.X, vs.Y);
 				wallPiece->SetColor(1.0f, 0.0f, 1.0f, 0.1f);
 				wallPiece->SetPosition(vs);
 				wallPiece->SetLayer("hud");
+				mobs[mobPos] = wallPiece;
+				mobPos++;
 				theWorld.Add(wallPiece);
 				_objects.push_back(wallPiece);
 			}
+		}
+
+		for (int i = 0; i < mobPos; i++) {
+			mobs[i]->Update(dt);
+			mobs[i]->SetPosition(mobs[i]->ReturnVector());
 		}
 
 		//and redraw player
@@ -303,21 +315,22 @@ void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button
 	if (_active) {
 		Vector2 v2 = MathUtil::ScreenToWorld(screenCoordinates.X, screenCoordinates.Y);
 		if (shottiming > 1.0f) {
+			theWorld.Remove(shot);
 			shottiming = 0;
-			Actor *wallPiece = new Actor();
-			wallPiece->SetSize(0.5f, 0.8f);
-			wallPiece->SetSprite("./Resources/Images/shot.png");
-			wallPiece->SetPosition(Vector2(x, y));
+			shot = new Actor();
+			shot->SetSize(0.5f, 0.8f);
+			shot->SetSprite("./Resources/Images/shot.png");
+			shot->SetPosition(Vector2(x, y));
 			v2 -= Vector2(x, y);
 			v2.Normalize();
 			v2 *= 10;
 			v2 += Vector2(x, y);
-			float i = MathUtil::AngleFromVector(v2);
-			wallPiece->SetRotation(MathUtil::ToDegrees(i)-90.0f);
-			wallPiece->SetLayer("hud");
-			wallPiece->MoveTo(v2, 1.0f, false, "");
-			theWorld.Add(wallPiece);
-			_objects.push_back(wallPiece);
+			float i = MathUtil::AngleFromVector(v2-Vector2(x,y));
+			shot->SetRotation(MathUtil::ToDegrees(i)-90.0f);
+			shot->SetLayer("hud");
+			shot->MoveTo(v2, 1.0f, false, "");
+			theWorld.Add(shot);
+			_objects.push_back(shot);
 		}
 	}
 }

@@ -19,6 +19,7 @@ int main(int argc, char* argv[])
 
 	//==============================================================================
 	
+	//defining layers actors can be added to, lower numbers are further back, can be negative
 	theWorld.NameLayer("scene", 0);
 	theWorld.NameLayer("background", 1);
 	theWorld.NameLayer("foreground", 2);
@@ -28,6 +29,7 @@ int main(int argc, char* argv[])
 	//adds the default grid so you can more easily place Actors
 	//theWorld.Add(new GridActor(), 5);
 	
+	//black screen, cause that's useful
 	theWorld.SetBackgroundColor(Color(0.0f, 0.0f, 0.0f, 1.0f, true));
 	
 	//give this game a manager so that things can actually happen
