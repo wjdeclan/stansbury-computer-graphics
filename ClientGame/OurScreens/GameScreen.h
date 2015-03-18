@@ -3,6 +3,7 @@
 #include <vector>
 #include "../OurGameManager.h"
 #include "../Mobs/Monster.h"
+#include "../Items/Fireball.h"
 
 using namespace std;
 

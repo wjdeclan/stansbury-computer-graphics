@@ -326,6 +326,7 @@ void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button
 	if (_active) {
 		Vector2 v2 = MathUtil::ScreenToWorld(screenCoordinates.X, screenCoordinates.Y);
 		if (shottiming > 0.5f) {
+			shottiming = 0;
 			v2 -= Vector2(x, y);
 			v2.Normalize();
 			v2 *= 10;
