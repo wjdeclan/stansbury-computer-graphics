@@ -1,7 +1,10 @@
 #pragma once
 
+#include <vector>
 #include "../OurGameManager.h"
 #include "../Mobs/Monster.h"
+
+using namespace std;
 
 class GameScreen : public BaseScreen, public MouseListener
 {
@@ -33,9 +36,10 @@ private:
 
 	Actor *shot;
 	
-	Actor *walls[500];
-	Actor *transp[100];
-	Actor *spawners[25];
+	vector < Actor* > solidWalls;
+	vector < Actor* > transpWalls;
+	vector < Actor* > spawners;
+	vector < Actor* > shots;
 	Monster *mobs[20];
 
 	Actor *player;

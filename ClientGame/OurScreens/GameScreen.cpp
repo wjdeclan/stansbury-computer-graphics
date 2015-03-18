@@ -3,6 +3,7 @@
 #include "../Mobs/Monster.h"
 #include <iostream>
 
+using namespace std;
 
 GameScreen::GameScreen()
 {
@@ -80,10 +81,9 @@ void GameScreen::Start()
 			wallPiece->SetColor(0.0f, 0.0f, 0.0f, 0.0f);
 			wallPiece->SetPosition(positions[i] + Vector2(0.5f, 0.5f));
 			wallPiece->SetLayer("scene");
+			solidWalls.push_back(wallPiece);
 			theWorld.Add(wallPiece);
 			_objects.push_back(wallPiece);
-			walls[mapPos] = wallPiece;
-			mapPos++;
 		}
 	}
 	positions.clear();
@@ -99,10 +99,9 @@ void GameScreen::Start()
 			wallPiece->SetColor(0.0f, 0.0f, 0.0f, 0.0f);
 			wallPiece->SetPosition(positions[i] + Vector2(0.5f, 0.5f));
 			wallPiece->SetLayer("scene");
+			transpWalls.push_back(wallPiece);
 			theWorld.Add(wallPiece);
 			_objects.push_back(wallPiece);
-			transp[transPos] = wallPiece;
-			transPos++;
 		}
 	}
 	positions.clear();
@@ -118,16 +117,15 @@ void GameScreen::Start()
 			wallPiece->SetColor(0.0f, 0.0f, 0.0f, 0.0f);
 			wallPiece->SetPosition(positions[i] + Vector2(0.5f, 0.5f));
 			wallPiece->SetLayer("scene");
+			spawners.push_back(wallPiece);
 			theWorld.Add(wallPiece);
 			_objects.push_back(wallPiece);
-			spawners[spawnPos] = wallPiece;
-			spawnPos++;
 		}
 	}
 
 	//and finally the player
 	player = new Actor();
-	player->SetSprite("C:\\Users\\Declan\\Downloads\\angel2d-master\\Code\\ClientGame\\Resources\\Images\\G2B.png");
+	player->SetSprite("./Resources/Images/char.png");
 	player->SetSize(0.5f, 0.5);
 	player->SetPosition(0, 0);
 	//player->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f, true));
@@ -215,12 +213,16 @@ void GameScreen::Update(float dt)
 			
 		}
 		//hit reset
-		for (int i = 0; i < mapPos; i++) {
+		for (int i = 0; i < solidWalls.size(); i++) {
 			Vector2 v2 = Vector2(x, y);
-			if (walls[i]->GetBoundingBox().Contains(v2)) {
+			BoundingBox bb = solidWalls.at(i)->GetBoundingBox();
+			if (bb.Contains(v2)) {
 				x = lastX;
 				y = lastY;
 				break;
+			}
+			if (bb.Contains(shot->GetPosition())) {
+				theWorld.Remove(shot);
 			}
 		}
 		lastY = y;
@@ -253,9 +255,10 @@ void GameScreen::Update(float dt)
 					x += speed * dt;
 				}
 			}
-			for (int i = 0; i < mapPos; i++) {
+			for (int i = 0; i < solidWalls.size(); i++) {
 				Vector2 v2 = Vector2(x, y);
-				if (walls[i]->GetBoundingBox().Contains(v2)) {
+				BoundingBox bb = solidWalls.at(i)->GetBoundingBox();
+				if (bb.Contains(v2)) {
 					x = lastX;
 					y = lastY;
 					break;
@@ -265,11 +268,12 @@ void GameScreen::Update(float dt)
 		//PROCESSING
 		//transparency checking
 		bool flag = false;
-		for (int i = 0; i < transPos; i++) {
+		for (int i = 0; i < transpWalls.size(); i++) {
 			Vector2 v2 = Vector2(x, y);
-			if (transp[i]->GetBoundingBox().Contains(v2)) {
+			BoundingBox bb = transpWalls.at(i)->GetBoundingBox();
+			if (bb.Contains(v2)) {
 				flag = true;
-				foreground->SetAlpha(0.2f);
+				foreground->SetAlpha(0.4f);
 				break;
 			}
 		}
@@ -280,8 +284,8 @@ void GameScreen::Update(float dt)
 		//do spawns
 		if (timing > 7.0f && mobPos < 20) {
 			timing -= 7.0f;
-			for (int i = 0; i < spawnPos; i++) {
-				Vector2 vs = spawners[i]->GetPosition();
+			for (int i = 0; i < spawners.size(); i++) {
+				Vector2 vs = spawners.at(i)->GetPosition();
 				//randomize around spawners
 				vs.X += MathUtil::RandomFloat() * 10 - 5;
 				vs.Y += MathUtil::RandomFloat() * 10 - 5;
@@ -303,6 +307,10 @@ void GameScreen::Update(float dt)
 
 		//and redraw player
 		player->SetPosition(x, y);
+
+		if (shottiming > 1.0f) {
+			theWorld.Remove(shot);
+		}
 	}
 	else {
 		
@@ -314,7 +322,7 @@ void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button
 	//click to exit to main menu, broken in current version
 	if (_active) {
 		Vector2 v2 = MathUtil::ScreenToWorld(screenCoordinates.X, screenCoordinates.Y);
-		if (shottiming > 1.0f) {
+		if (shottiming > 0.5f) {
 			theWorld.Remove(shot);
 			shottiming = 0;
 			shot = new Actor();
