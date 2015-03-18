@@ -177,6 +177,7 @@ cd ..\Tools\BuildScripts\
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/wd4716 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/wd4716 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="Items\Fireball.cpp" />
     <ClCompile Include="Mobs\Monster.cpp" />
     <ClCompile Include="OurGameManager.cpp" />
     <ClCompile Include="OurScreens\CreditsScreen.cpp" />
@@ -193,6 +194,7 @@ cd ..\Tools\BuildScripts\
     <ResourceCompile Include="platforms\win\ClientGame.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Items\Fireball.h" />
     <ClInclude Include="Mobs\Monster.h" />
     <ClInclude Include="OurGameManager.h" />
     <ClInclude Include="OurScreens\CreditsScreen.h" />

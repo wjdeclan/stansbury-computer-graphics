@@ -39,7 +39,7 @@ private:
 	vector < Actor* > solidWalls;
 	vector < Actor* > transpWalls;
 	vector < Actor* > spawners;
-	vector < Actor* > shots;
+	vector < Fireball* > shots;
 	Monster *mobs[20];
 
 	Actor *player;

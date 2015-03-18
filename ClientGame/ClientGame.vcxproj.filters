@@ -25,6 +25,9 @@
     <Filter Include="Mobs">
       <UniqueIdentifier>{35f9a66a-d582-40ab-a20b-f0d6e66ff9e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Items">
+      <UniqueIdentifier>{1b97b397-7e73-4d21-88f9-30f2b31d1332}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Angel\Scripting\Interfaces\AngelLuaWrapping.cpp">
@@ -49,6 +52,9 @@
     </ClCompile>
     <ClCompile Include="Mobs\Monster.cpp">
       <Filter>Mobs</Filter>
+    </ClCompile>
+    <ClCompile Include="Items\Fireball.cpp">
+      <Filter>Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +84,9 @@
     </ClInclude>
     <ClInclude Include="Mobs\Monster.h">
       <Filter>Mobs</Filter>
+    </ClInclude>
+    <ClInclude Include="Items\Fireball.h">
+      <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

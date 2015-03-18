@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameScreen.h"
 #include "../Mobs/Monster.h"
+#include "../Items/Fireball.h"
 #include <iostream>
 
 using namespace std;
@@ -281,6 +282,10 @@ void GameScreen::Update(float dt)
 			foreground->SetAlpha(1.0f);
 		}
 
+		for (int i = 0; i < shots.size(); i++) {
+			shots.at(i)->Update(dt);
+		}
+
 		//do spawns
 		if (timing > 7.0f && mobPos < 20) {
 			timing -= 7.0f;
@@ -290,7 +295,6 @@ void GameScreen::Update(float dt)
 				vs.X += MathUtil::RandomFloat() * 10 - 5;
 				vs.Y += MathUtil::RandomFloat() * 10 - 5;
 				Monster *wallPiece = new Monster(vs.X, vs.Y);
-				wallPiece->SetColor(1.0f, 0.0f, 1.0f, 0.1f);
 				wallPiece->SetPosition(vs);
 				wallPiece->SetLayer("hud");
 				mobs[mobPos] = wallPiece;
@@ -302,7 +306,6 @@ void GameScreen::Update(float dt)
 
 		for (int i = 0; i < mobPos; i++) {
 			mobs[i]->Update(dt);
-			mobs[i]->SetPosition(mobs[i]->ReturnVector());
 		}
 
 		//and redraw player
@@ -323,22 +326,15 @@ void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button
 	if (_active) {
 		Vector2 v2 = MathUtil::ScreenToWorld(screenCoordinates.X, screenCoordinates.Y);
 		if (shottiming > 0.5f) {
-			theWorld.Remove(shot);
-			shottiming = 0;
-			shot = new Actor();
-			shot->SetSize(0.5f, 0.8f);
-			shot->SetSprite("./Resources/Images/shot.png");
-			shot->SetPosition(Vector2(x, y));
 			v2 -= Vector2(x, y);
 			v2.Normalize();
 			v2 *= 10;
 			v2 += Vector2(x, y);
-			float i = MathUtil::AngleFromVector(v2-Vector2(x,y));
-			shot->SetRotation(MathUtil::ToDegrees(i)-90.0f);
-			shot->SetLayer("hud");
-			shot->MoveTo(v2, 1.0f, false, "");
-			theWorld.Add(shot);
-			_objects.push_back(shot);
+			float i = MathUtil::AngleFromVector(v2 - Vector2(x, y));
+			Fireball *f = new Fireball(Vector2(x, y), v2, 1.0f, MathUtil::ToDegrees(i) - 90.0f);
+			theWorld.Add(f);
+			_objects.push_back(f);
+			shots.push_back(f);
 		}
 	}
 }

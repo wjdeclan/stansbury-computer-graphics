@@ -4,14 +4,12 @@
 class Monster : public Actor
 {
 public:
-	Monster(float x, float y);
+	Monster(Vector2 v2, Vector2 vel);
 
 	int health;
-	float x, y;
-
+	Vector2 pos;
+	Vector2 dPos;
 
 	void Update(float dx);
-
-	Vector2 ReturnVector();
 
 };

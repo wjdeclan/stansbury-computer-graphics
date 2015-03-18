@@ -1,19 +1,18 @@
 #include "stdafx.h"
 #include "Monster.h"
 
-Monster::Monster(float x1, float y1)
+Monster::Monster(Vector2 vs, Vector2 vp)
 {
 	health = 100;
-	x = x1;
-	y = y1;
+	pos = vs;
+	dPos = vp;
+
+	this->SetColor(Color(1.0f,1.0f,1.0f,1.0f));
 	
 }
 
 void Monster::Update(float dx)
 {
-	x += 0.1 * dx;
-}
-
-Vector2 Monster::ReturnVector() {
-	return Vector2(x, y);
+	pos += dPos * dx;
+	this->SetPosition(pos);
 }
