@@ -22,26 +22,23 @@ private:
 	bool paused;
 	float x, y;
 	float lastX, lastY;
-	int mapPos, transPos, spawnPos, mobPos;
 	bool _active;
 	float speed, defspeed;
 
 	int dirX, dirY;
 
-	float timing, shottiming;
+	float timing, spawntiming, shottiming;
 
-	TextActor *pause;
+	TextActor *pause, *timer;
 
 	Actor *background;
 	Actor *foreground;
-
-	Actor *shot;
 	
 	vector < Actor* > solidWalls;
 	vector < Actor* > transpWalls;
 	vector < Actor* > spawners;
 	vector < Fireball* > shots;
-	Monster *mobs[20];
+	vector < Monster* > mobs;
 
 	Actor *player;
 	AngelSampleHandle music;

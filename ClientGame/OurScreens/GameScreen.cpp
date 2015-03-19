@@ -19,9 +19,6 @@ GameScreen::GameScreen()
 
 void GameScreen::Start()
 {
-	shot = new Actor();
-	theWorld.Remove(shot);
-
 	//turn on clicks, turn off pause
 	_active = true;
 	paused = false;
@@ -31,15 +28,17 @@ void GameScreen::Start()
 	//default speed to reset to
 	defspeed = 6.5f;
 
-	//array counters to keep actor count lower
-	mapPos = 0;
-	transPos = 0;
-	spawnPos = 0;
-	mobPos = 0;
-
 	//various timers
 	timing = 0;
+	spawntiming = 0;
 	shottiming = 0;
+
+	timer = new TextActor("Console", "");
+	timer->SetColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
+	timer->SetAlignment(TXT_Center);
+	timer->SetLayer("pause");
+	theWorld.Add(timer);
+	_objects.push_back(timer);
 
 	//menu items
 	pause = new TextActor("Console", "PAUSED");
@@ -159,8 +158,12 @@ void GameScreen::MessageHandler(String content)
 void GameScreen::Update(float dt)
 {
 	if (!paused) {
-		//mob spawner timer
 		timing += dt;
+		//timer->SetDisplayString("EYYYYYYY");
+		timer->SetDisplayString(to_string(timing));
+		timer->SetPosition(x, y + 7.0f);
+		//mob spawner timer
+		spawntiming += dt;
 		//player shooting timer
 		shottiming += dt;
 
@@ -221,9 +224,6 @@ void GameScreen::Update(float dt)
 				x = lastX;
 				y = lastY;
 				break;
-			}
-			if (bb.Contains(shot->GetPosition())) {
-				theWorld.Remove(shot);
 			}
 		}
 		lastY = y;
@@ -286,34 +286,29 @@ void GameScreen::Update(float dt)
 			shots.at(i)->Update(dt);
 		}
 
+		for (int i = 0; i < mobs.size(); i++) {
+			mobs.at(i)->Update(dt);
+		}
+
 		//do spawns
-		if (timing > 7.0f && mobPos < 20) {
-			timing -= 7.0f;
+		if (spawntiming > 7.0f && mobs.size() < 20) {
+			spawntiming -= 7.0f;
 			for (int i = 0; i < spawners.size(); i++) {
 				Vector2 vs = spawners.at(i)->GetPosition();
 				//randomize around spawners
 				vs.X += MathUtil::RandomFloat() * 10 - 5;
 				vs.Y += MathUtil::RandomFloat() * 10 - 5;
-				Monster *wallPiece = new Monster(vs.X, vs.Y);
+				Monster *wallPiece = new Monster(vs, Vector2(1.0f,1.0f));
 				wallPiece->SetPosition(vs);
 				wallPiece->SetLayer("hud");
-				mobs[mobPos] = wallPiece;
-				mobPos++;
+				mobs.push_back(wallPiece);
 				theWorld.Add(wallPiece);
 				_objects.push_back(wallPiece);
 			}
 		}
 
-		for (int i = 0; i < mobPos; i++) {
-			mobs[i]->Update(dt);
-		}
-
 		//and redraw player
 		player->SetPosition(x, y);
-
-		if (shottiming > 1.0f) {
-			theWorld.Remove(shot);
-		}
 	}
 	else {
 		
@@ -325,14 +320,13 @@ void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button
 	//click to exit to main menu, broken in current version
 	if (_active) {
 		Vector2 v2 = MathUtil::ScreenToWorld(screenCoordinates.X, screenCoordinates.Y);
-		if (shottiming > 0.5f) {
+		if (shottiming > 0.2f) {
 			shottiming = 0;
 			v2 -= Vector2(x, y);
 			v2.Normalize();
 			v2 *= 10;
-			v2 += Vector2(x, y);
-			float i = MathUtil::AngleFromVector(v2 - Vector2(x, y));
-			Fireball *f = new Fireball(Vector2(x, y), v2, 1.0f, MathUtil::ToDegrees(i) - 90.0f);
+			float i = MathUtil::AngleFromVector(v2);
+			Fireball *f = new Fireball(Vector2(x, y), v2, 1.0f, MathUtil::ToDegrees(i) - 85.0f, &shots);
 			theWorld.Add(f);
 			_objects.push_back(f);
 			shots.push_back(f);
