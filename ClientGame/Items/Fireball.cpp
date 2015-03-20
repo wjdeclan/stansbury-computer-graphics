@@ -7,6 +7,7 @@ Fireball::Fireball(Vector2 v2, Vector2 v2b, float time, float rotation)
 	TTL = time;
 	pos = v2;
 	dPos = v2b;
+	dmg = 75;
 	this->SetRotation(rotation);
 	this->SetSize(0.6f, 0.8f);
 	//this->SetColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
@@ -18,12 +19,18 @@ Fireball::Fireball(Vector2 v2, Vector2 v2b, float time, float rotation)
 void Fireball::Update(float dx)
 {
 	if (TTL <= 0.0f) {
-		theWorld.Remove(this);
 	}
 	else {
-		
 		pos += dPos*dx;
 		TTL -= dx;
 		this->SetPosition(pos);
 	}
+}
+
+int Fireball::GetDamage() {
+	return dmg;
+}
+
+float Fireball::getTime() {
+	return TTL;
 }

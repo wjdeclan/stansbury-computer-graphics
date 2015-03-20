@@ -7,12 +7,21 @@ Monster::Monster(Vector2 vs, Vector2 vp)
 	pos = vs;
 	dPos = vp;
 
-	this->SetColor(Color(1.0f,1.0f,1.0f,1.0f));
-	
+	//this->SetColor(Color(1.0f,1.0f,1.0f,1.0f));
+	this->SetSprite("./Resources/Images/monster.png");
 }
 
 void Monster::Update(float dx)
 {
 	pos += dPos * dx;
 	this->SetPosition(pos);
+}
+
+void Monster::Damage(int dmg) {
+	health -= dmg;
+}
+
+int Monster::getHealth()
+{
+	return health;
 }

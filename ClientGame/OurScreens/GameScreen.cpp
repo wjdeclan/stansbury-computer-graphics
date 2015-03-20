@@ -282,20 +282,25 @@ void GameScreen::Update(float dt)
 			foreground->SetAlpha(1.0f);
 		}
 
-		for (int i = 0; i < shots.size(); i++) {
-			shots.at(i)->Update(dt);
-			if (hitCheck(shots.at(i)->GetBoundingBox())) {
-				theWorld.Remove(shots.at(i));
+		for (int i = 0; i < mobs.size(); i++) {
+			mobs.at(i)->Update(dt);
+			if (mobs.at(i)->getHealth() <= 0) {
+				theWorld.Remove(mobs.at(i));
+				mobs.erase(mobs.begin() + i);
 			}
 		}
 
-		for (int i = 0; i < mobs.size(); i++) {
-			mobs.at(i)->Update(dt);
+		for (int i = 0; i < shots.size(); i++) {
+			shots.at(i)->Update(dt);
+			if (hitCheck(shots.at(i)->GetBoundingBox()) || shots.at(i)->getTime() <= 0.0f) {
+				theWorld.Remove(shots.at(i));
+				shots.erase(shots.begin()+i);
+			}
 		}
 
 		//do spawns
-		if (spawntiming > 7.0f && mobs.size() < 20) {
-			spawntiming -= 7.0f;
+		if (spawntiming > 4.0f && mobs.size() < 20) {
+			spawntiming -= 4.0f;
 			for (int i = 0; i < spawners.size(); i++) {
 				Vector2 vs = spawners.at(i)->GetPosition();
 				//randomize around spawners
@@ -303,7 +308,7 @@ void GameScreen::Update(float dt)
 				vs.Y += MathUtil::RandomFloat() * 10 - 5;
 				Monster *wallPiece = new Monster(vs, Vector2(1.0f,1.0f));
 				wallPiece->SetPosition(vs);
-				wallPiece->SetLayer("hud");
+				wallPiece->SetLayer("pause");
 				mobs.push_back(wallPiece);
 				theWorld.Add(wallPiece);
 				_objects.push_back(wallPiece);
@@ -347,9 +352,11 @@ bool GameScreen::hitCheck(BoundingBox bb) {
 
 	for (int i = 0; i < mobs.size(); i++) {
 		if (mobs.at(i)->GetBoundingBox().Intersects(bb)) {
-			theWorld.Remove(mobs.at(i));
+			mobs.at(i)->Damage(shots.at(0)->GetDamage());
 			return true;
 			break;
 		}
 	}
+
+	return false;
 }

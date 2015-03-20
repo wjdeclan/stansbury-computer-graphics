@@ -11,5 +11,7 @@ public:
 	Vector2 dPos;
 
 	void Update(float dx);
+	void Damage(int dmg);
+	int getHealth();
 
 };
