@@ -18,6 +18,8 @@ public:
 	virtual void MessageHandler(String content);
 	virtual void MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button);
 
+	bool hitCheck(BoundingBox bb);
+
 private:
 	bool paused;
 	float x, y;

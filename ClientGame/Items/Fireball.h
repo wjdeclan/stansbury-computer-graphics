@@ -8,9 +8,7 @@ using namespace std;
 class Fireball : public Actor
 {
 public:
-	Fireball(Vector2 a, Vector2 b, float TTL, float rot, vector <Fireball*> *shots);
-
-	vector <Fireball*> *shots;
+	Fireball(Vector2 a, Vector2 b, float TTL, float rot);
 
 	float TTL;
 	Vector2 pos, dPos;

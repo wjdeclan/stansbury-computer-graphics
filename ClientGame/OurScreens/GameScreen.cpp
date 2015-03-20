@@ -284,6 +284,9 @@ void GameScreen::Update(float dt)
 
 		for (int i = 0; i < shots.size(); i++) {
 			shots.at(i)->Update(dt);
+			if (hitCheck(shots.at(i)->GetBoundingBox())) {
+				theWorld.Remove(shots.at(i));
+			}
 		}
 
 		for (int i = 0; i < mobs.size(); i++) {
@@ -326,10 +329,27 @@ void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button
 			v2.Normalize();
 			v2 *= 10;
 			float i = MathUtil::AngleFromVector(v2);
-			Fireball *f = new Fireball(Vector2(x, y), v2, 1.0f, MathUtil::ToDegrees(i) - 85.0f, &shots);
+			Fireball *f = new Fireball(Vector2(x, y), v2, 1.0f, MathUtil::ToDegrees(i) - 85.0f);
 			theWorld.Add(f);
 			_objects.push_back(f);
 			shots.push_back(f);
+		}
+	}
+}
+
+bool GameScreen::hitCheck(BoundingBox bb) {
+	for (int i = 0; i < solidWalls.size(); i++) {
+		if (solidWalls.at(i)->GetBoundingBox().Intersects(bb)) {
+			return true;
+			break;
+		}
+	}
+
+	for (int i = 0; i < mobs.size(); i++) {
+		if (mobs.at(i)->GetBoundingBox().Intersects(bb)) {
+			theWorld.Remove(mobs.at(i));
+			return true;
+			break;
 		}
 	}
 }
