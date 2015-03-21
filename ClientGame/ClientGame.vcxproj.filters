@@ -56,6 +56,9 @@
     <ClCompile Include="Items\Fireball.cpp">
       <Filter>Items</Filter>
     </ClCompile>
+    <ClCompile Include="OurScreens\LoseScreen.cpp">
+      <Filter>OurScreens</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="platforms\win\ClientGame.rc">
@@ -87,6 +90,9 @@
     </ClInclude>
     <ClInclude Include="Items\Fireball.h">
       <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="OurScreens\LoseScreen.h">
+      <Filter>OurScreens</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

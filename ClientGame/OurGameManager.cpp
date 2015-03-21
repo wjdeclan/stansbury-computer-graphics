@@ -11,6 +11,7 @@
 #include "OurScreens/CreditsScreen.h"
 #include "OurScreens/SettingsScreen.h"
 #include "OurScreens/GameScreen.h"
+#include "OurScreens/LoseScreen.h"
 
 //===================================================================
 
@@ -70,6 +71,8 @@ OurGameManager::OurGameManager()
 	_screens.push_back(new CreditsScreen());
 	_screens.push_back(new SettingsScreen());
 	_screens.push_back(new GameScreen());
+	_screens.push_back(new LoseScreen());
+
 
 	//And this defines where we gon start
 	unsigned int startingIndex = 0;

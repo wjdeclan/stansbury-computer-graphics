@@ -182,6 +182,7 @@ cd ..\Tools\BuildScripts\
     <ClCompile Include="OurGameManager.cpp" />
     <ClCompile Include="OurScreens\CreditsScreen.cpp" />
     <ClCompile Include="OurScreens\GameScreen.cpp" />
+    <ClCompile Include="OurScreens\LoseScreen.cpp" />
     <ClCompile Include="OurScreens\SettingsScreen.cpp" />
     <ClCompile Include="OurScreens\StartScreen.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -199,6 +200,7 @@ cd ..\Tools\BuildScripts\
     <ClInclude Include="OurGameManager.h" />
     <ClInclude Include="OurScreens\CreditsScreen.h" />
     <ClInclude Include="OurScreens\GameScreen.h" />
+    <ClInclude Include="OurScreens\LoseScreen.h" />
     <ClInclude Include="OurScreens\SettingsScreen.h" />
     <ClInclude Include="OurScreens\StartScreen.h" />
     <ClInclude Include="platforms\win\resource.h" />

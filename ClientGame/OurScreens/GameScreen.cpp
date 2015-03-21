@@ -284,6 +284,9 @@ void GameScreen::Update(float dt)
 
 		for (int i = 0; i < mobs.size(); i++) {
 			mobs.at(i)->Update(dt);
+			if (mobs.at(i)->GetBoundingBox().Intersects(player->GetBoundingBox())) {
+				OurGame.SetScreen(4);
+			}
 			if (mobs.at(i)->getHealth() <= 0) {
 				theWorld.Remove(mobs.at(i));
 				mobs.erase(mobs.begin() + i);
