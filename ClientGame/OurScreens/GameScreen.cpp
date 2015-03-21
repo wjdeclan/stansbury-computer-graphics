@@ -34,6 +34,8 @@ void GameScreen::Start()
 	timing = 0;
 	spawntiming = 0;
 	shottiming = 0;
+	spawnSpeed = 3.0f;
+	mHealth = 100;
 
 	timer = new TextActor("Console", "");
 	timer->SetColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
@@ -172,8 +174,31 @@ void GameScreen::Update(float dt)
 			instructions->SetColor(Color(1.0f,0.1f,0.1f,1.0f-timing));
 		}
 		timing += dt;
-		//timer->SetDisplayString("EYYYYYYY");
 		timer->SetDisplayString(to_string(timing));
+		
+
+		if (timing > 60.0 && timing < 120.0)
+		{
+			spawnSpeed = 2.5;
+			mHealth = 150;
+		}
+		else if (timing > 120.0 && timing < 180.0)
+		{
+			spawnSpeed = 2.0;
+			mHealth = 250;
+		}
+		else if (timing > 180.0 && timing < 240.0)
+		{
+			spawnSpeed = 1.0;
+			mHealth = 350;
+		}
+		else if (timing > 240.0)
+		{
+			spawnSpeed = .5;
+			mHealth = 500;
+		}
+
+
 		timer->SetPosition(x, y + 7.0f);
 		//mob spawner timer
 		spawntiming += dt;
@@ -316,14 +341,14 @@ void GameScreen::Update(float dt)
 		}
 
 		//do spawns
-		if (spawntiming > 4.0f && mobs.size() < 20) {
-			spawntiming -= 4.0f;
+		if (spawntiming > spawnSpeed) {
+			spawntiming -= spawnSpeed;
 			for (int i = 0; i < spawners.size(); i++) {
 				Vector2 vs = spawners.at(i)->GetPosition();
 				//randomize around spawners
 				vs.X += MathUtil::RandomFloat() * 10 - 5;
 				vs.Y += MathUtil::RandomFloat() * 10 - 5;
-				Monster *wallPiece = new Monster(vs, player);
+				Monster *wallPiece = new Monster(vs, player, mHealth);
 				wallPiece->SetPosition(vs);
 				wallPiece->SetLayer("pause");
 				mobs.push_back(wallPiece);

@@ -26,6 +26,8 @@ private:
 	float lastX, lastY;
 	bool _active;
 	float speed, defspeed;
+	float spawnSpeed;
+	int mHealth;
 
 	int dirX, dirY;
 

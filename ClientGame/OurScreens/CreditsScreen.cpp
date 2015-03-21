@@ -14,6 +14,7 @@ void CreditsScreen::Start()
 	//create actors
 	TextActor *AuthorTitle = new TextActor("Console", "Authors:");
 	TextActor *Authors = new TextActor("Console", "Declan Whitford Jones & Nick Brown");
+	TextActor *Motto = new TextActor("Console", "If it fits, it ships.");
 
 	//and put them in the right place, color them, size them, etc.
 	AuthorTitle->SetPosition(0, 7);
@@ -21,11 +22,19 @@ void CreditsScreen::Start()
 	AuthorTitle->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f, true));
 	theWorld.Add(AuthorTitle);
 	_objects.push_back(AuthorTitle);
+
 	Authors->SetPosition(0, 5);
 	Authors->SetAlignment(TXT_Center);
 	Authors->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f, true));
 	theWorld.Add(Authors);
 	_objects.push_back(Authors);
+
+	Motto->SetPosition(0, 3);
+	Motto->SetAlignment(TXT_Center);
+	Motto->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f, true));
+	theWorld.Add(Motto);
+	_objects.push_back(Motto);
+
 
 	//and how to escape the credits screen
 	TextActor *instructions = new TextActor("Console", "Press Escape to return to menu.");

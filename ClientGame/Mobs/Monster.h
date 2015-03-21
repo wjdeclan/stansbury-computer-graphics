@@ -4,7 +4,7 @@
 class Monster : public Actor
 {
 public:
-	Monster(Vector2 v2, Actor *point);
+	Monster(Vector2 v2, Actor *point, int mHealth);
 
 	Actor *player;
 
@@ -15,5 +15,5 @@ public:
 	void Update(float dx);
 	void Damage(int dmg);
 	int getHealth();
-
+	int mSpeed = 3;
 };
