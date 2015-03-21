@@ -36,7 +36,7 @@ public:
 
 	//=============================================
 
-
+	std::vector<BaseScreen*> _screens;
 
 	static OurGameManager &GetInstance();
 
@@ -53,7 +53,6 @@ protected:
 	static OurGameManager *s_OurGameManager;
 
 private:
-	std::vector<BaseScreen*> _screens;
 	int _current;
 	AngelSampleHandle sample;
 };
