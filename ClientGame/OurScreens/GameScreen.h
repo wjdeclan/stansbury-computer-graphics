@@ -21,7 +21,7 @@ public:
 	bool hitCheck(BoundingBox bb);
 
 private:
-	bool paused;
+	bool paused, skip;
 	float x, y;
 	float lastX, lastY;
 	bool _active;
@@ -31,7 +31,7 @@ private:
 
 	float timing, spawntiming, shottiming;
 
-	TextActor *pause, *timer;
+	TextActor *pause, *timer, *instructions;
 
 	Actor *background;
 	Actor *foreground;

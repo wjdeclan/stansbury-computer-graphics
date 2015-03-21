@@ -22,6 +22,8 @@ void GameScreen::Start()
 	//turn on clicks, turn off pause
 	_active = true;
 	paused = false;
+
+	skip = false;
 	
 	//speed used by the player
 	speed = 6.5f;
@@ -48,6 +50,13 @@ void GameScreen::Start()
 	pause->SetLayer("pause");
 	theWorld.Add(pause);
 	_objects.push_back(pause);
+
+	instructions = new TextActor("Console", "WARNING: FLYING EYEBALLS INCOMING\nTHEY CAN GO ABOVE WALLS\nFLEE FOR YOUR LIFE");
+	instructions->SetColor(Color(1.0f, 0.1f, 0.1f, 1.0f));
+	instructions->SetAlignment(TXT_Center);
+	instructions->SetLayer("hud");
+	theWorld.Add(instructions);
+	_objects.push_back(instructions);
 
 	//map building	
 	background = new Actor();
@@ -158,6 +167,10 @@ void GameScreen::MessageHandler(String content)
 void GameScreen::Update(float dt)
 {
 	if (!paused) {
+		if (timing <= 1.0f) {
+			instructions->SetPosition(x, y);
+			instructions->SetColor(Color(1.0f,0.1f,0.1f,1.0f-timing));
+		}
 		timing += dt;
 		//timer->SetDisplayString("EYYYYYYY");
 		timer->SetDisplayString(to_string(timing));
@@ -285,6 +298,7 @@ void GameScreen::Update(float dt)
 		for (int i = 0; i < mobs.size(); i++) {
 			mobs.at(i)->Update(dt);
 			if (mobs.at(i)->GetBoundingBox().Intersects(player->GetBoundingBox())) {
+				skip = true;
 				OurGame.SetScreen(4);
 			}
 			if (mobs.at(i)->getHealth() <= 0) {
@@ -309,7 +323,7 @@ void GameScreen::Update(float dt)
 				//randomize around spawners
 				vs.X += MathUtil::RandomFloat() * 10 - 5;
 				vs.Y += MathUtil::RandomFloat() * 10 - 5;
-				Monster *wallPiece = new Monster(vs, Vector2(1.0f,1.0f));
+				Monster *wallPiece = new Monster(vs, player);
 				wallPiece->SetPosition(vs);
 				wallPiece->SetLayer("pause");
 				mobs.push_back(wallPiece);
@@ -329,7 +343,7 @@ void GameScreen::Update(float dt)
 void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button)
 {
 	//click to exit to main menu, broken in current version
-	if (_active) {
+	if (_active && !skip) {
 		Vector2 v2 = MathUtil::ScreenToWorld(screenCoordinates.X, screenCoordinates.Y);
 		if (shottiming > 0.2f) {
 			shottiming = 0;
