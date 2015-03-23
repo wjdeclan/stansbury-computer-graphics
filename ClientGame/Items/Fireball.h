@@ -19,5 +19,7 @@ public:
 
 	int GetDamage();
 	float getTime();
+	Vector2 getPos();
+	void TrueUpdate(float dx);
 
 };

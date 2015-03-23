@@ -13,13 +13,16 @@ Monster::Monster(Vector2 vs, Actor *point, int mHealth)
 
 void Monster::Update(float dx)
 {
+	
+}
+
+void Monster::TrueUpdate(float dx) {
 	Vector2 v2 = player->GetPosition();
 	v2 -= this->GetPosition();
 	v2.Normalize();
 	v2 *= mSpeed;
 	dPos = v2;
 	pos += dPos * dx;
-	this->SetPosition(pos);
 }
 
 void Monster::Damage(int dmg) {
@@ -29,4 +32,8 @@ void Monster::Damage(int dmg) {
 int Monster::getHealth()
 {
 	return health;
+}
+
+Vector2 Monster::getPos() {
+	return pos;
 }

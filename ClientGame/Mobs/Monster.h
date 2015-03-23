@@ -15,5 +15,7 @@ public:
 	void Update(float dx);
 	void Damage(int dmg);
 	int getHealth();
+	Vector2 getPos();
+	void TrueUpdate(float dx);
 	int mSpeed = 3;
 };

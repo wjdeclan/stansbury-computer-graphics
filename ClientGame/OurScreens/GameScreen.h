@@ -22,18 +22,23 @@ public:
 
 private:
 	bool paused, skip;
+	Actor *select;
 	float x, y;
+	int pos;
 	float lastX, lastY;
 	bool _active;
 	float speed, defspeed;
 	float spawnSpeed;
 	int mHealth;
+	int cashMoney;
+	int reward;
 
 	int dirX, dirY;
 
 	float timing, spawntiming, shottiming;
 
-	TextActor *pause, *timer, *instructions;
+	TextActor *pause, *timer, *instructions, *cashDisp;
+	TextActor *shop1, *shop2, *shop3;
 
 	Actor *background;
 	Actor *foreground;

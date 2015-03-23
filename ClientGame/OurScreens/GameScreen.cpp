@@ -23,6 +23,8 @@ void GameScreen::Start()
 	_active = true;
 	paused = false;
 
+	pos = 0;
+
 	skip = false;
 	
 	//speed used by the player
@@ -36,6 +38,40 @@ void GameScreen::Start()
 	shottiming = 0;
 	spawnSpeed = 3.0f;
 	mHealth = 100;
+	cashMoney = 0;
+	reward = 50;
+
+	select = new Actor();
+	select->SetSize(8.0f, 2.0f);
+	select->SetPosition(0, 50);
+	select->SetColor(Color(0.8f, 0.2f, 0.2f, 0.3f, true));
+	select->SetLayer("pause");
+	theWorld.Add(select);
+	_objects.push_back(select);
+
+	shop1 = new TextActor("Console", "Player Speed");
+	shop1->SetColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
+	shop1->SetAlignment(TXT_Left);
+	shop1->SetPosition(0, 50);
+	shop1->SetLayer("pause");
+	theWorld.Add(shop1);
+	_objects.push_back(shop1);
+
+	shop2 = new TextActor("Console", "Player Damage");
+	shop2->SetColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
+	shop2->SetAlignment(TXT_Left);
+	shop2->SetPosition(0, 50);
+	shop2->SetLayer("pause");
+	theWorld.Add(shop2);
+	_objects.push_back(shop2);
+
+	shop3 = new TextActor("Console", "Player Shot Rate");
+	shop3->SetColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
+	shop3->SetAlignment(TXT_Left);
+	shop3->SetPosition(0, 50);
+	shop3->SetLayer("pause");
+	theWorld.Add(shop3);
+	_objects.push_back(shop3);
 
 	timer = new TextActor("Console", "");
 	timer->SetColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
@@ -43,6 +79,13 @@ void GameScreen::Start()
 	timer->SetLayer("pause");
 	theWorld.Add(timer);
 	_objects.push_back(timer);
+
+	cashDisp = new TextActor("Console", "");
+	cashDisp->SetColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
+	cashDisp->SetAlignment(TXT_Left);
+	cashDisp->SetLayer("pause");
+	theWorld.Add(cashDisp);
+	_objects.push_back(cashDisp);
 
 	//menu items
 	pause = new TextActor("Console", "PAUSED");
@@ -159,9 +202,37 @@ void GameScreen::MessageHandler(String content)
 		//act as toggle
 		if (paused) {
 			pause->SetPosition(x, y+5);
+			shop1->SetPosition(x - 9.5, y + 3);
+			shop2->SetPosition(x - 9.5, y);
+			shop3->SetPosition(x - 9.5, y - 3);
 		}
 		else {
 			pause->SetPosition(0, 50);
+			select->SetPosition(0, 50);
+			shop1->SetPosition(0, 50);
+			shop2->SetPosition(0, 50);
+			shop3->SetPosition(0, 50);
+		}
+	}
+
+	if (paused) {
+		if (content == "W") {
+			pos = (pos + 2) % 3;
+		}
+		//move down the menu (with wrapping)
+		if (content == "S") {
+			pos = (pos + 1) % 3;
+		}
+		//set the screen to something else
+		if (content == "SPC") {
+			switch (pos) {
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			}
 		}
 	}
 }
@@ -169,33 +240,41 @@ void GameScreen::MessageHandler(String content)
 void GameScreen::Update(float dt)
 {
 	if (!paused) {
-		if (timing <= 1.0f) {
+		if (timing <= 5.0f) {
 			instructions->SetPosition(x, y);
-			instructions->SetColor(Color(1.0f,0.1f,0.1f,1.0f-timing));
+			instructions->SetColor(Color(1.0f,0.1f,0.1f,1.0f-timing/5));
 		}
 		timing += dt;
 		timer->SetDisplayString(to_string(timing));
 		
+		string cash = "Cash: " + to_string(cashMoney);
 
-		if (timing > 60.0 && timing < 120.0)
+		cashDisp->SetDisplayString((cash));
+		cashDisp->SetPosition(x-13,y-10);
+
+		if (timing > 60.0 && timing < 20.0)
 		{
 			spawnSpeed = 2.5;
 			mHealth = 150;
+			reward = 100;
 		}
-		else if (timing > 120.0 && timing < 180.0)
+		else if (timing > 20.0 && timing < 30.0)
 		{
 			spawnSpeed = 2.0;
 			mHealth = 250;
+			reward = 200;
 		}
-		else if (timing > 180.0 && timing < 240.0)
+		else if (timing > 30.0 && timing < 40.0)
 		{
 			spawnSpeed = 1.0;
 			mHealth = 350;
+			reward = 400;
 		}
-		else if (timing > 240.0)
+		else if (timing > 40.0)
 		{
 			spawnSpeed = .5;
-			mHealth = 500;
+			mHealth = 500; 
+			reward = 1000;
 		}
 
 
@@ -321,19 +400,22 @@ void GameScreen::Update(float dt)
 		}
 
 		for (int i = 0; i < mobs.size(); i++) {
-			mobs.at(i)->Update(dt);
+			mobs.at(i)->TrueUpdate(dt);
+			mobs.at(i)->SetPosition(mobs.at(i)->getPos());
 			if (mobs.at(i)->GetBoundingBox().Intersects(player->GetBoundingBox())) {
 				skip = true;
 				OurGame.SetScreen(4);
 			}
 			if (mobs.at(i)->getHealth() <= 0) {
+				cashMoney += reward;
 				theWorld.Remove(mobs.at(i));
 				mobs.erase(mobs.begin() + i);
 			}
 		}
 
 		for (int i = 0; i < shots.size(); i++) {
-			shots.at(i)->Update(dt);
+			shots.at(i)->TrueUpdate(dt);
+			shots.at(i)->SetPosition(shots.at(i)->getPos());
 			if (hitCheck(shots.at(i)->GetBoundingBox()) || shots.at(i)->getTime() <= 0.0f) {
 				theWorld.Remove(shots.at(i));
 				shots.erase(shots.begin()+i);
@@ -361,12 +443,12 @@ void GameScreen::Update(float dt)
 		player->SetPosition(x, y);
 	}
 	else {
-		
+		select->SetPosition(x-6, y+3 - 3 * pos);
 	}
 }
 
-void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button)
-{
+
+void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button) {
 	//click to exit to main menu, broken in current version
 	if (_active && !skip) {
 		Vector2 v2 = MathUtil::ScreenToWorld(screenCoordinates.X, screenCoordinates.Y);

@@ -18,12 +18,15 @@ Fireball::Fireball(Vector2 v2, Vector2 v2b, float time, float rotation)
 
 void Fireball::Update(float dx)
 {
+
+}
+
+void Fireball::TrueUpdate(float dx) {
 	if (TTL <= 0.0f) {
 	}
 	else {
 		pos += dPos*dx;
 		TTL -= dx;
-		this->SetPosition(pos);
 	}
 }
 
@@ -33,4 +36,8 @@ int Fireball::GetDamage() {
 
 float Fireball::getTime() {
 	return TTL;
+}
+
+Vector2 Fireball::getPos() {
+	return pos;
 }
