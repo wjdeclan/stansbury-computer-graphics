@@ -2,12 +2,12 @@
 #include "Fireball.h"
 #include "../OurGameManager.h"
 
-Fireball::Fireball(Vector2 v2, Vector2 v2b, float time, float rotation)
+Fireball::Fireball(Vector2 v2, Vector2 v2b, float time, float rotation, int d)
 {
 	TTL = time;
 	pos = v2;
 	dPos = v2b;
-	dmg = 75;
+	dmg = d;
 	this->SetRotation(rotation);
 	this->SetSize(0.6f, 0.8f);
 	//this->SetColor(Color(0.0f, 0.0f, 0.0f, 1.0f));

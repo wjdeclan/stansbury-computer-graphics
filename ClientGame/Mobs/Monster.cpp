@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "Monster.h"
 
-Monster::Monster(Vector2 vs, Actor *point, int mHealth)
+Monster::Monster(Vector2 vs, Actor *point, int mHealth, int mS)
 {
 	player = point;
 	health = mHealth;
 	pos = vs;
+	mSpeed = mS;
 
 	//this->SetColor(Color(1.0f,1.0f,1.0f,1.0f));
 	this->SetSprite("./Resources/Images/monster.png");

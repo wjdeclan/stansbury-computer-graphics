@@ -4,7 +4,7 @@
 class Monster : public Actor
 {
 public:
-	Monster(Vector2 v2, Actor *point, int mHealth);
+	Monster(Vector2 v2, Actor *point, int mHealth, int mSpeed);
 
 	Actor *player;
 

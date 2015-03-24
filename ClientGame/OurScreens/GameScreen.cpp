@@ -23,6 +23,10 @@ void GameScreen::Start()
 	_active = true;
 	paused = false;
 
+	rate = 0.3f;
+
+	dmg = 75;
+
 	pos = 0;
 
 	skip = false;
@@ -38,7 +42,9 @@ void GameScreen::Start()
 	shottiming = 0;
 	spawnSpeed = 3.0f;
 	mHealth = 100;
+	mSpeed = 3;
 	cashMoney = 0;
+	price = 250;
 	reward = 50;
 
 	select = new Actor();
@@ -89,7 +95,7 @@ void GameScreen::Start()
 
 	//menu items
 	pause = new TextActor("Console", "PAUSED");
-	pause->SetColor(Color(1.0f, 1.0f, 1.0f, 0.2f, true));
+	pause->SetColor(Color(0.0f, 0.0f, 0.0f, 1.0f, true));
 	pause->SetAlignment(TXT_Center);
 	pause->SetPosition(0, 50);
 	pause->SetLayer("pause");
@@ -225,13 +231,22 @@ void GameScreen::MessageHandler(String content)
 		}
 		//set the screen to something else
 		if (content == "SPC") {
-			switch (pos) {
-			case 0:
-				break;
-			case 1:
-				break;
-			case 2:
-				break;
+			if (cashMoney >= price) {
+				cashMoney -= price;
+				string cash = "Cash: " + to_string(cashMoney);
+				cashDisp->SetDisplayString((cash));
+				price *= 1.2;
+				switch (pos) {
+				case 0:
+					speed += 1;
+					break;
+				case 1:
+					dmg += 25;
+					break;
+				case 2:
+					rate *= 0.8f;
+					break;
+				}
 			}
 		}
 	}
@@ -239,41 +254,46 @@ void GameScreen::MessageHandler(String content)
 
 void GameScreen::Update(float dt)
 {
+	
 	if (!paused) {
 		if (timing <= 5.0f) {
 			instructions->SetPosition(x, y);
 			instructions->SetColor(Color(1.0f,0.1f,0.1f,1.0f-timing/5));
 		}
 		timing += dt;
-		timer->SetDisplayString(to_string(timing));
+		timer->SetDisplayString(to_string((int) timing));
 		
 		string cash = "Cash: " + to_string(cashMoney);
 
 		cashDisp->SetDisplayString((cash));
 		cashDisp->SetPosition(x-13,y-10);
 
-		if (timing > 60.0 && timing < 20.0)
+		if (timing > 60.0 && timing < 120.0)
 		{
 			spawnSpeed = 2.5;
 			mHealth = 150;
+			mSpeed = 4;
 			reward = 100;
 		}
-		else if (timing > 20.0 && timing < 30.0)
+		else if (timing > 120.0 && timing < 180.0)
 		{
 			spawnSpeed = 2.0;
 			mHealth = 250;
+			mSpeed = 7;
 			reward = 200;
 		}
-		else if (timing > 30.0 && timing < 40.0)
+		else if (timing > 180.0 && timing < 240.0)
 		{
 			spawnSpeed = 1.0;
 			mHealth = 350;
+			mSpeed = 10;
 			reward = 400;
 		}
-		else if (timing > 40.0)
+		else if (timing > 240.0)
 		{
 			spawnSpeed = .5;
-			mHealth = 500; 
+			mHealth = 500;
+			mSpeed = 15;
 			reward = 1000;
 		}
 
@@ -430,7 +450,7 @@ void GameScreen::Update(float dt)
 				//randomize around spawners
 				vs.X += MathUtil::RandomFloat() * 10 - 5;
 				vs.Y += MathUtil::RandomFloat() * 10 - 5;
-				Monster *wallPiece = new Monster(vs, player, mHealth);
+				Monster *wallPiece = new Monster(vs, player, mHealth, mSpeed);
 				wallPiece->SetPosition(vs);
 				wallPiece->SetLayer("pause");
 				mobs.push_back(wallPiece);
@@ -444,6 +464,10 @@ void GameScreen::Update(float dt)
 	}
 	else {
 		select->SetPosition(x-6, y+3 - 3 * pos);
+		pause->SetDisplayString(to_string(price));
+		shop1->SetDisplayString("Player Speed " + to_string(speed));
+		shop2->SetDisplayString("Player Damage " + to_string(dmg));
+		shop3->SetDisplayString("Fire Rate " + to_string(rate));
 	}
 }
 
@@ -452,13 +476,13 @@ void GameScreen::MouseDownEvent(Vec2i screenCoordinates, MouseButtonInput button
 	//click to exit to main menu, broken in current version
 	if (_active && !skip) {
 		Vector2 v2 = MathUtil::ScreenToWorld(screenCoordinates.X, screenCoordinates.Y);
-		if (shottiming > 0.2f) {
+		if (shottiming > rate) {
 			shottiming = 0;
 			v2 -= Vector2(x, y);
 			v2.Normalize();
 			v2 *= 10;
 			float i = MathUtil::AngleFromVector(v2);
-			Fireball *f = new Fireball(Vector2(x, y), v2, 1.0f, MathUtil::ToDegrees(i) - 85.0f);
+			Fireball *f = new Fireball(Vector2(x, y), v2, 1.0f, MathUtil::ToDegrees(i) - 85.0f, dmg);
 			theWorld.Add(f);
 			_objects.push_back(f);
 			shots.push_back(f);

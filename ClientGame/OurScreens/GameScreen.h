@@ -29,8 +29,10 @@ private:
 	bool _active;
 	float speed, defspeed;
 	float spawnSpeed;
-	int mHealth;
-	int cashMoney;
+	float rate;
+	int mHealth, mSpeed;
+	int cashMoney, price;
+	int dmg;
 	int reward;
 
 	int dirX, dirY;

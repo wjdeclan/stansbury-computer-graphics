@@ -14,7 +14,7 @@ void CreditsScreen::Start()
 	//create actors
 	TextActor *AuthorTitle = new TextActor("Console", "Authors:");
 	TextActor *Authors = new TextActor("Console", "Declan Whitford Jones & Nick Brown");
-	TextActor *Motto = new TextActor("Console", "If it fits, it ships.");
+	TextActor *Motto = new TextActor("Console", "If it fits, it ships.\n\n\n\n\n\n\n\n\'Too many shots fired\'");
 
 	//and put them in the right place, color them, size them, etc.
 	AuthorTitle->SetPosition(0, 7);
