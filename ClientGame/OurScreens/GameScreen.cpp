@@ -268,28 +268,28 @@ void GameScreen::Update(float dt)
 		cashDisp->SetDisplayString((cash));
 		cashDisp->SetPosition(x-13,y-10);
 
-		if (timing > 60.0 && timing < 120.0)
+		if (timing > 40.0 && timing < 80.0)
 		{
 			spawnSpeed = 2.5;
 			mHealth = 150;
 			mSpeed = 4;
 			reward = 100;
 		}
-		else if (timing > 120.0 && timing < 180.0)
+		else if (timing > 80.0 && timing < 120.0)
 		{
 			spawnSpeed = 2.0;
 			mHealth = 250;
 			mSpeed = 7;
 			reward = 200;
 		}
-		else if (timing > 180.0 && timing < 240.0)
+		else if (timing > 120.0 && timing < 160.0)
 		{
 			spawnSpeed = 1.0;
 			mHealth = 350;
 			mSpeed = 10;
 			reward = 400;
 		}
-		else if (timing > 240.0)
+		else if (timing > 160.0)
 		{
 			spawnSpeed = .5;
 			mHealth = 500;
